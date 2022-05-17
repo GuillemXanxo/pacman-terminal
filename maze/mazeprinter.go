@@ -2,6 +2,7 @@ package maze
 
 import (
 	"fmt"
+	"pacman/input"
 
 	"github.com/danicat/simpleansi"
 )
@@ -10,6 +11,19 @@ import (
 func PrintMaze (str []string) {
   simpleansi.ClearScreen()
   for _, line := range str {
-    fmt.Println(line)
+    for _, character := range line {
+      switch character {
+      case '#':
+        fmt.Printf("%c", character)
+      default:
+        fmt.Print(" ")
+      }
+    }
+    fmt.Println()
   }
+
+  simpleansi.MoveCursor(input.Player.Row, input.Player.Col)
+  fmt.Print("P")
+  // Move cursor outside of maze drawing area
+  simpleansi.MoveCursor(len(str)+1, 0)
 }

@@ -29,18 +29,19 @@ func main() {
     PrintMaze(maze)
 
     //process input
-    input, err := input.ReadFromTerminal()
+    intro, err := input.ReadFromTerminal()
     if err != nil {
       log.Println("Error reading input: ", err)
       break
     }
 
     // process movement
+    input.MovePlayer(intro, maze)
 
     // process collisions
 
     // check game over
-    if input == "ESC" {
+    if intro == "ESC" {
       break
     }
 
@@ -52,6 +53,19 @@ func main() {
 func PrintMaze (str []string) {
   simpleansi.ClearScreen()
   for _, line := range str {
-    fmt.Println(line)
+    for _, character := range line {
+      switch character {
+      case '#':
+        fmt.Printf("%c", character)
+      default:
+        fmt.Print(" ")
+      }
+    }
+    fmt.Println()
   }
+
+  simpleansi.MoveCursor(input.Player.Row, input.Player.Col)
+  fmt.Print("P")
+  // Move cursor outside of maze drawing area
+  simpleansi.MoveCursor(len(str)+1, 0)
 }
