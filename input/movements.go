@@ -17,17 +17,17 @@ func makeMove (oldRow, oldCol int, direction string, maze []string) (newRow, new
     }
   case "DOWN":
     newRow = oldRow + 1
-    if newRow > len(maze) {
+    if newRow == len(maze) {
       newRow = 0
     }
   case "LEFT":
     newCol = oldCol - 1
     if newCol < 0 {
-      newCol = len(maze[0])
+      newCol = len(maze[0]) - 1
     }
   case "RIGHT":
     newCol = oldCol + 1
-    if newCol >= len(maze[0]) {
+    if newCol == len(maze[0]) {
       newCol = 0
     }
   }
