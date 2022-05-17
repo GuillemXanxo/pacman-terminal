@@ -6,6 +6,7 @@ import (
 	de dimensionar correctamente los slices de bytes a leer o escribir ni de tener que
 	comprobar el num de bytes leidos o escritos y controlar el completado de las operaciones */
 	"os"
+	"pacman/input"
 )
 
 
@@ -26,12 +27,23 @@ func LoadMaze(mazefile string) ([]string, error) {
 //
   scanner := bufio.NewScanner(file)
 //save each line to a var and append that line to our maze slice. Scan read each line of a file with \n end of lines
+//scanner.Scan() will return true while there is something to be read from the file, 
+//and scanner.Text() will return the next line of input.
   for scanner.Scan(){
     line := scanner.Text()
     mazeInner = append(mazeInner, line)
   }
-//scanner.Scan() will return true while there is something to be read from the file, 
-//and scanner.Text() will return the next line of input.
+
+//3- Capture player position
+// traverse each character of the maze and create a new player when it locates a `P`
+  for row, line := range mazeInner {
+    for col, char := range line {
+      switch char {
+      case 'P':
+        input.Player = input.Sprite{Row: row, Col: col}
+      }
+    }
+  }
   
   return mazeInner, nil
 //if everything goes ok return error == nil
