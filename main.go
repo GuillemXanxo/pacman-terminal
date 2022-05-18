@@ -37,6 +37,7 @@ func main() {
 
     // process movement
     input.MovePlayer(intro, maze)
+    input.MoveGhosts(maze)
 
     // process collisions
 
