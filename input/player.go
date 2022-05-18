@@ -48,10 +48,15 @@ func MovePlayer(direction string, maze []string, numDots, score int) (int, int) 
   case '.':
     numDots--
     score++
-    //Remove dot from maze
-    maze[Player.Row] = maze[Player.Row][0:Player.Col] + " " + maze[Player.Row][Player.Col+1:]
-    //string are inmutable, we cannot just change the . for a blank
-    //We generate a new string from copying the original until the position, blank, after the position to the end
+    removeDot(Player.Row, Player.Col, maze)
+  case 'X':
+    score += 10
+    removeDot(Player.Row, Player.Col, maze)
   }
   return numDots, score
 }
+
+//We generate a new string from copying the original until the position, blank, after the position to the end
+func removeDot(row, col int, maze []string) { 
+    maze[row] = maze[row][0:col] + " " + maze[row][col+1:]
+  }

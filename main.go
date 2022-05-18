@@ -46,7 +46,7 @@ func main() {
 //game loop
   for {
     //update screen
-    PrintMaze(maze)
+    PrintMaze(maze, game.Config)
 
     // process movement
     select {
@@ -63,7 +63,13 @@ func main() {
     game.DeadCheck(input.Player, input.Ghosts)
 
     // check game over
-    if game.Lives <= 0 || game.NumDots == 0 {
+    if game.Lives <= 0 {
+      moveCursor(input.Player.Row, input.Player.Col, game.Config)
+      fmt.Print(game.Config.Death)
+      moveCursor(len(maze)+2, 0, game.Config)
+      break
+    }
+    if game.NumDots == 0 {
       break
     }
 
@@ -74,30 +80,38 @@ func main() {
 
 
 //each loop of the game the screen is cleared and then each line of the maze is printed again
-func PrintMaze (str []string) {
+func PrintMaze (str []string, cfg game.Configuration) {
   simpleansi.ClearScreen()
   for _, line := range str {
     for _, character := range line {
       switch character {
       case '#':
-        fallthrough //tant si troba # com . imprimira el caracter
+        fmt.Print(simpleansi.WithBlueBackground(cfg.Wall))
       case '.':
-        fmt.Printf("%c", character)
+        fmt.Print(cfg.Dot)
       default:
-        fmt.Print(" ")
+        fmt.Print(cfg.Space)
       }
     }
     fmt.Println()
   }
   //Print player
-  simpleansi.MoveCursor(input.Player.Row, input.Player.Col)
-  fmt.Print("P")
+  moveCursor(input.Player.Row, input.Player.Col, cfg)
+  fmt.Print(cfg.Player)
   //Print ghosts
   for _, ghost := range input.Ghosts {
-    simpleansi.MoveCursor(ghost.Row, ghost.Col)
-    fmt.Print("G")
+    moveCursor(ghost.Row, ghost.Col, cfg)
+    fmt.Print(cfg.Ghost)
   }
   // Move cursor outside of maze drawing area, otherwise stays next to the P
-  simpleansi.MoveCursor(len(str)+1, 0)
+  moveCursor(len(str)+1, 0, cfg)
   fmt.Println("Score:", game.Score, "\tLives:", game.Lives)
+}
+
+func moveCursor(row, col int, cfg game.Configuration) {
+    if cfg.UseEmoji {
+        simpleansi.MoveCursor(row, col*2)
+    } else {
+        simpleansi.MoveCursor(row, col)
+    }
 }
