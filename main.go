@@ -63,9 +63,14 @@ func PrintMaze (str []string) {
     }
     fmt.Println()
   }
-
+  //Print player
   simpleansi.MoveCursor(input.Player.Row, input.Player.Col)
   fmt.Print("P")
-  // Move cursor outside of maze drawing area
+  //Print ghosts
+  for _, ghost := range input.Ghosts {
+    simpleansi.MoveCursor(ghost.Row, ghost.Col)
+    fmt.Print("G")
+  }
+  // Move cursor outside of maze drawing area, otherwise stays next to the P
   simpleansi.MoveCursor(len(str)+1, 0)
 }

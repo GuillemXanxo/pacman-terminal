@@ -41,6 +41,8 @@ func LoadMaze(mazefile string) ([]string, error) {
       switch char {
       case 'P':
         input.Player = input.Sprite{Row: row, Col: col}
+      case 'G':
+        input.Ghosts = append(input.Ghosts, &input.Sprite{Row: row, Col: col})
       }
     }
   }
