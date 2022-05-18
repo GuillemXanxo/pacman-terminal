@@ -11,8 +11,6 @@ import (
 	"github.com/danicat/simpleansi"
 )
 
-
-
 func main() {
   //prepare the terminal
   input.InitTerminal()
@@ -24,6 +22,13 @@ func main() {
     log.Println("Error while loading maze")
     return
   }
+
+  //load configuration for emojis
+  err = game.LoadConfig("config.json")
+	if err != nil {
+		log.Println("failed to load configuration:", err)
+		return
+	}
 
   //process input async
   intro := make(chan string)
@@ -66,6 +71,7 @@ func main() {
     time.Sleep(200 * time.Millisecond)
   }
 }
+
 
 //each loop of the game the screen is cleared and then each line of the maze is printed again
 func PrintMaze (str []string) {
