@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"pacman/game"
 	"pacman/input"
 	"pacman/maze"
 
@@ -36,13 +37,14 @@ func main() {
     }
 
     // process movement
-    input.MovePlayer(intro, maze)
+    game.NumDots, game.Score = input.MovePlayer(intro, maze, game.NumDots, game.Score)
     input.MoveGhosts(maze)
 
     // process collisions
-
+    game.DeadCheck(input.Player, input.Ghosts)
+    
     // check game over
-    if intro == "ESC" {
+    if intro == "ESC" || game.Lives <= 0 || game.NumDots == 0 {
       break
     }
 
@@ -57,6 +59,8 @@ func PrintMaze (str []string) {
     for _, character := range line {
       switch character {
       case '#':
+        fallthrough //tant si troba # com . imprimira el caracter
+      case '.':
         fmt.Printf("%c", character)
       default:
         fmt.Print(" ")
@@ -74,4 +78,5 @@ func PrintMaze (str []string) {
   }
   // Move cursor outside of maze drawing area, otherwise stays next to the P
   simpleansi.MoveCursor(len(str)+1, 0)
+  fmt.Println("Score:", game.Score, "\tLives:", game.Lives)
 }

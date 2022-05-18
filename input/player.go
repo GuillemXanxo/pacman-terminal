@@ -42,6 +42,16 @@ func makeMove (oldRow, oldCol int, direction string, maze []string) (newRow, new
   return
 }
 
-func MovePlayer(direction string, maze []string) {
+func MovePlayer(direction string, maze []string, numDots, score int) (int, int) {
   Player.Row, Player.Col = makeMove(Player.Row, Player.Col, direction, maze)
+  switch maze[Player.Row][Player.Col] {
+  case '.':
+    numDots--
+    score++
+    //Remove dot from maze
+    maze[Player.Row] = maze[Player.Row][0:Player.Col] + " " + maze[Player.Row][Player.Col+1:]
+    //string are inmutable, we cannot just change the . for a blank
+    //We generate a new string from copying the original until the position, blank, after the position to the end
+  }
+  return numDots, score
 }

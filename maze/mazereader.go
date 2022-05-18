@@ -6,6 +6,7 @@ import (
 	de dimensionar correctamente los slices de bytes a leer o escribir ni de tener que
 	comprobar el num de bytes leidos o escritos y controlar el completado de las operaciones */
 	"os"
+	"pacman/game"
 	"pacman/input"
 )
 
@@ -43,6 +44,8 @@ func LoadMaze(mazefile string) ([]string, error) {
         input.Player = input.Sprite{Row: row, Col: col}
       case 'G':
         input.Ghosts = append(input.Ghosts, &input.Sprite{Row: row, Col: col})
+      case '.':
+        game.NumDots++
       }
     }
   }
