@@ -6,6 +6,7 @@ import (
 	"pacman/game"
 	"pacman/input"
 	"pacman/maze"
+	"time"
 
 	"github.com/danicat/simpleansi"
 )
@@ -24,31 +25,45 @@ func main() {
     return
   }
 
+  //process input async
+  intro := make(chan string)
+  go func(ch chan<- string) { //argument only accepts a chan to write, not to read
+    for {
+      intro, err := input.ReadFromTerminal()
+      if err != nil {
+        log.Println("Error reading input: ", err)
+        ch<- "ESC"
+      }
+    ch<- intro
+    }
+  }(intro)
+
 //game loop
   for {
     //update screen
     PrintMaze(maze)
 
-    //process input
-    intro, err := input.ReadFromTerminal()
-    if err != nil {
-      log.Println("Error reading input: ", err)
-      break
-    }
-
     // process movement
-    game.NumDots, game.Score = input.MovePlayer(intro, maze, game.NumDots, game.Score)
+    select {
+    case move := <-intro:
+      if move == "ESC" {
+				game.Lives = 0
+			}
+      game.NumDots, game.Score = input.MovePlayer(move, maze, game.NumDots, game.Score)
+    default:  
+    }
     input.MoveGhosts(maze)
 
     // process collisions
     game.DeadCheck(input.Player, input.Ghosts)
-    
+
     // check game over
-    if intro == "ESC" || game.Lives <= 0 || game.NumDots == 0 {
+    if game.Lives <= 0 || game.NumDots == 0 {
       break
     }
 
     // repeat
+    time.Sleep(200 * time.Millisecond)
   }
 }
 
