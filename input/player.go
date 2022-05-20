@@ -1,9 +1,13 @@
 package input
 
+import "time"
+
 //A struct to hold players position
 type Sprite struct {
   Row int
   Col int
+  StartRow int
+  StartCol int
 }
 
 var Player Sprite
@@ -42,7 +46,7 @@ func makeMove (oldRow, oldCol int, direction string, maze []string) (newRow, new
   return
 }
 
-func MovePlayer(direction string, maze []string, numDots, score int) (int, int) {
+func MovePlayer(direction string, maze []string, numDots, score int, pill time.Duration) (int, int) {
   Player.Row, Player.Col = makeMove(Player.Row, Player.Col, direction, maze)
   switch maze[Player.Row][Player.Col] {
   case '.':
@@ -52,11 +56,12 @@ func MovePlayer(direction string, maze []string, numDots, score int) (int, int) 
   case 'X':
     score += 10
     removeDot(Player.Row, Player.Col, maze)
+    go changeGhostStatus(pill)
   }
   return numDots, score
 }
 
 //We generate a new string from copying the original until the position, blank, after the position to the end
 func removeDot(row, col int, maze []string) { 
-    maze[row] = maze[row][0:col] + " " + maze[row][col+1:]
-  }
+  maze[row] = maze[row][0:col] + " " + maze[row][col+1:]
+}

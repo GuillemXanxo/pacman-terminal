@@ -28,7 +28,7 @@ func PrintMaze (str []string, cfg game.Configuration ) {
   MoveCursor(input.Player.Row, input.Player.Col, cfg)
   fmt.Print(cfg.Player)
   for _, ghost := range input.Ghosts {
-    MoveCursor(ghost.Row, ghost.Col, cfg)
+    MoveCursor(ghost.Position.Row, ghost.Position.Col, cfg)
     fmt.Print(cfg.Ghost)
   }
   // Move cursor outside of maze drawing area
